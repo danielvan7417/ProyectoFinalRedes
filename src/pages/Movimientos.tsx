@@ -215,13 +215,7 @@ const Movimientos = () => {
                   <Select
                     value={formData.tipo}
                     onValueChange={(value: "entrada" | "salida") => {
-                      const cantidadActual = formData.cantidad;
-                      const cantidadAbsoluta = cantidadActual ? Math.abs(parseInt(cantidadActual)).toString() : "";
-                      setFormData({ 
-                        ...formData, 
-                        tipo: value,
-                        cantidad: cantidadAbsoluta ? (value === "entrada" ? cantidadAbsoluta : `-${cantidadAbsoluta}`) : ""
-                      });
+                      setFormData({ ...formData, tipo: value });
                     }}
                   >
                     <SelectTrigger>
@@ -234,20 +228,15 @@ const Movimientos = () => {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cantidad">
-                    Cantidad {formData.tipo === "salida" && "(valor negativo)"}
-                  </Label>
+                  <Label htmlFor="cantidad">Cantidad</Label>
                   <Input
                     id="cantidad"
                     type="number"
+                    min={1}
                     value={formData.cantidad}
                     onChange={(e) => {
                       const valor = e.target.value;
-                      if (formData.tipo === "entrada" && valor.startsWith("-")) {
-                        setFormData({ ...formData, cantidad: valor.substring(1) });
-                      } else if (formData.tipo === "salida" && !valor.startsWith("-") && valor !== "") {
-                        setFormData({ ...formData, cantidad: `-${valor}` });
-                      } else {
+                      if (valor === "" || (!isNaN(parseInt(valor)) && parseInt(valor) > 0)) {
                         setFormData({ ...formData, cantidad: valor });
                       }
                     }}
